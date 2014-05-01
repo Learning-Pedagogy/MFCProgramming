@@ -28,11 +28,30 @@ CMainWindow::CMainWindow ()
 
 void CMainWindow::OnPaint ()
 {
-    CPaintDC dc (this);
-    
-    CRect rect;
-    GetClientRect (&rect);
+	CRect rect;
+	GetClientRect(&rect);
 
-    dc.DrawText (_T ("Hello, MFC"), -1, &rect,
-        DT_SINGLELINE | DT_CENTER | DT_VCENTER);
+
+    CPaintDC dc (this);
+	dc.SetViewportOrg(rect.Width()/2, rect.Height()/2);
+	dc.SetBkMode(TRANSPARENT);
+
+	for (int i = 0; i<300; i+=150)
+	{
+		LOGFONT lf;
+		::ZeroMemory(&lf, sizeof(LOGFONT));
+		lf.lfHeight = 160;
+		lf.lfHeight = FW_BOLD;
+		lf.lfEscapement = i;
+		lf.lfOrientation = i;
+		::lstrcpy(lf.lfFaceName, _T("Arial"));
+
+		CFont font;
+		font.CreateFontIndirect(&lf);
+
+		CFont * pOldFont = dc.SelectObject(&font);
+		dc.TextOut(0,0, CString(_T("M")));
+		dc.SelectObject(pOldFont);
+	}
+
 }
